@@ -1,0 +1,120 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: install-quay
+  namespace: default
+  annotations:
+    policy.open-cluster-management.io/categories: T-Mobile Standard Operators
+    policy.open-cluster-management.io/standards: Infra Standard workload 
+    policy.open-cluster-management.io/controls: Baseline Configuration
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: quay-operator-product-sub-1
+        spec:
+          remediationAction: enforce
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operators.coreos.com/v1alpha1
+                kind: Subscription
+                metadata:
+                  name: quay-operator
+                  namespace: openshift-operators
+                spec:
+                  name: quay-operator
+                  channel: stable-3.8
+                  installPlanApproval: Automatic
+                  source: redhat-operators
+                  sourceNamespace: openshift-marketplace
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: quay-operator-status-1
+        spec:
+          remediationAction: enforce
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operators.coreos.com/v1alpha1
+                kind: ClusterServiceVersion
+                metadata:
+                  namespace: openshift-operators
+                spec:
+                  displayName: Red Hat Quay
+                status:
+                  phase: Succeeded
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: registry-1
+        spec:
+          remediationAction: inform
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: quay.redhat.com/v1
+                kind: QuayRegistry
+                metadata:
+                  name: devregistry
+                  namespace: openshift-operators
+                spec:
+                  components:
+                    - kind: clair
+                      managed: true
+                    - kind: postgres
+                      managed: true
+                    - kind: objectstorage
+                      managed: true
+                    - kind: redis
+                      managed: true
+                    - kind: horizontalpodautoscaler
+                      managed: true
+                    - kind: route
+                      managed: true
+                    - kind: monitoring
+                      managed: true
+                    - kind: mirror
+                      managed: true
+                    - kind: tls
+                      managed: true
+                    - kind: quay
+                      managed: true
+                    - kind: clairpostgres
+                      managed: true
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: registry-status-1
+        spec:
+          remediationAction: enforce
+          severity: high
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: quay.redhat.com/v1
+                kind: QuayRegistry
+                metadata:
+                  namespace: openshift-operators
+                status:
+                  phase: Running                  
+  remediationAction: enforce
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: install-quay-placement
+  namespace: default
+spec:
+  clusterSets:
+    - global
