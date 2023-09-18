@@ -1,0 +1,112 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-push-identity-provider
+  namespace: default
+  annotations:
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration
+    policy.open-cluster-management.io/standards: NIST SP 800-53
+  creationTimestamp: 2023-09-15T18:17:04Z
+  generation: 1
+  managedFields:
+  resourceVersion: "68689955"
+  uid: 9adecad3-cb01-4cc3-bebc-034d4b2a1ba1
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: push-identity-provider
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: config.openshift.io/v1
+                kind: OAuth
+                metadata:
+                  name: cluster
+                spec:
+                  identityProviders:
+                    - name: htpasswd_provider
+                      htpasswd:
+                        fileData:
+                          name: htpasswd-secret
+                      mappingMethod: claim
+                      type: HTPasswd
+                    - name: ldap_provider
+                      ldap:
+                        attributes:
+                          name:
+                            - cn
+                          email:
+                            - mail
+                          id:
+                            - dn
+                          preferredUsername:
+                            - uid
+                        bindDN: uid=ocp,cn=users,cn=compat,dc=refmobilecloud,dc=ux,dc=nl,dc=tmo
+                        bindPassword:
+                          name: ldap-secret
+                        insecure: true
+                        url: ldap://ref-idm-01.refmobilecloud.ux.nl.tmo/dc=refmobilecloud,dc=ux,dc=nl,dc=tmo?uid?sub?(objectclass=krbprincipalaux)
+                      mappingMethod: claim
+                      type: LDAP
+          remediationAction: inform
+          severity: low
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: htpasswd-file
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                data:
+                  htpasswd: ZGV2YWRtaW46JDJ5JDA1JDI1b2dCcnV0dXJNYlRVYlljMjExdi5iSDQxUnA4Zll1NVl6ZjVCMFhNU3NFRlowTnFnQjRDCm11czokYXByMSRSamNzcUFVOSQyUzRobE1GM2JTUjBTTFBOVHQ1Y3EuCm11cy12aWV3OiRhcHIxJHlJdWdRVzd1JEFKTnhTbTNyTi5kSUhobXUzdmVSQy4=
+                kind: Secret
+                metadata:
+                  name: htpasswd-secret
+                  namespace: openshift-config
+                type: Opaque
+          remediationAction: enforce
+          severity: low
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: ldap-file
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                data:
+                  bindPassword: dGRkLVZBUzE=
+                kind: Secret
+                metadata:
+                  name: ldap-secret
+                  namespace: openshift-config
+                type: Opaque
+          remediationAction: enforce
+          severity: low
+  remediationAction: enforce
