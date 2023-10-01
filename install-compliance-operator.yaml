@@ -119,7 +119,7 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: install-gatekeeper-placement
+  name: install-gatekeeper-placement-binding
   namespace: default
 placementRef:
   name: install-gatekeeper-placement
