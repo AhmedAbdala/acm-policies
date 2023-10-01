@@ -66,3 +66,26 @@ spec:
           remediationAction: enforce
           severity: high
   remediationAction: enforce
+  ---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: install-nmstate-placement
+  namespace: default
+spec:
+  clusterSets:
+    - global
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: install-elastic-search-placement
+  namespace: default
+placementRef:
+  name: install-elastic-search-placement
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+subjects:
+  - name: install-elastic-search
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
