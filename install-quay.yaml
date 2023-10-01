@@ -118,3 +118,17 @@ metadata:
 spec:
   clusterSets:
     - global
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: install-quay-placement-binding
+  namespace: default
+placementRef:
+  name: install-quay-placement
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+subjects:
+  - name: install-quay
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
