@@ -115,7 +115,7 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: install-nmstate-placement
+  name: install-nmstate-placement-binding
   namespace: default
 placementRef:
   name: install-nmstate-placement
