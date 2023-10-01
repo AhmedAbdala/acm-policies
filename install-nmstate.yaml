@@ -111,3 +111,17 @@ metadata:
 spec:
   clusterSets:
     - global
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: install-nmstate-placement
+  namespace: default
+placementRef:
+  name: install-nmstate-placement
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+subjects:
+  - name: install-nmstate
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
