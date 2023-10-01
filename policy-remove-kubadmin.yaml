@@ -5,11 +5,6 @@ metadata:
   namespace: default
   annotations:
     policy.open-cluster-management.io/description: policy-remove-kubadmin
-  creationTimestamp: 2023-09-15T19:36:27Z
-  generation: 1
-  managedFields:
-  resourceVersion: "68782003"
-  uid: 60c8bf74-94f5-4659-b0ba-d73c89292ad6
 spec:
   disabled: false
   policy-templates:
@@ -28,3 +23,26 @@ spec:
                   name: kubeadmin
                   namespace: kube-system
                 type: Opaque
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: policy-remove-kubadmin-placement
+  namespace: default
+spec:
+  clusterSets:
+    - global
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: policy-remove-kubadmin-placement-binding
+  namespace: default
+placementRef:
+  name: policy-remove-kubadmin-placement
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+subjects:
+  - name: policy-remove-kubadmin
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
