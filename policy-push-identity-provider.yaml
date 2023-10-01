@@ -110,3 +110,27 @@ spec:
           remediationAction: enforce
           severity: low
   remediationAction: enforce
+
+  ---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: policy-push-identity-provider-placement
+  namespace: default
+spec:
+  clusterSets:
+    - global
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: policy-push-identity-provider-placement-binding
+  namespace: default
+placementRef:
+  name: policy-push-identity-provider-placement
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+subjects:
+  - name: policy-push-identity-provider
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
