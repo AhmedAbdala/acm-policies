@@ -96,7 +96,7 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: install-metallb-placement
+  name: install-metallb-placement-binding
   namespace: default
 placementRef:
   name: install-metallb-placement
