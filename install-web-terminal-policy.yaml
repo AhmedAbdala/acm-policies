@@ -52,3 +52,27 @@ spec:
                 status:
                   phase: Succeeded
   remediationAction: enforce
+  
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: install-web-terminal-placement
+  namespace: default
+spec:
+  clusterSets:
+    - global
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: install-web-terminal-placement-binding
+  namespace: default
+placementRef:
+  name: install-web-terminal-placement
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+subjects:
+  - name: install-web-terminal
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
