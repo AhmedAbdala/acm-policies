@@ -99,7 +99,7 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: install-oadp-placement
+  name: install-oadp-placement-binding
   namespace: default
 placementRef:
   name: install-oadp-placement
