@@ -87,8 +87,22 @@ spec:
 apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: Placement
 metadata:
-  name: install-nmstate-placement
+  name: install-metallb-placement
   namespace: default
 spec:
   clusterSets:
     - global
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: install-metallb-placement
+  namespace: default
+placementRef:
+  name: install-metallb-placement
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+subjects:
+  - name: install-metallb
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
