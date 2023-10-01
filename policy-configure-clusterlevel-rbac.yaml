@@ -34,3 +34,26 @@ spec:
                   - name: devadmin
                     apiGroup: rbac.authorization.k8s.io
                     kind: User
+---
+apiVersion: cluster.open-cluster-management.io/v1beta1
+kind: Placement
+metadata:
+  name: policy-configure-clusterlevel-rbac-placement
+  namespace: default
+spec:
+  clusterSets:
+    - global
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: policy-configure-clusterlevel-rbac-placement-binding
+  namespace: default
+placementRef:
+  name: policy-configure-clusterlevel-rbac-placement
+  apiGroup: cluster.open-cluster-management.io
+  kind: Placement
+subjects:
+  - name: policy-configure-clusterlevel-rbac
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
