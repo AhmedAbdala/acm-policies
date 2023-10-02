@@ -43,7 +43,7 @@ spec:
                   targetNamespaces:
                     - openshift-operators-redhat
           pruneObjectBehavior: DeleteIfCreated
-          remediationAction: inform
+          remediationAction: enforce
           severity: high
     - objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
