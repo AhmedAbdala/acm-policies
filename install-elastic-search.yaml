@@ -29,6 +29,26 @@ spec:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ConfigurationPolicy
         metadata:
+          name: elasticsearch-operator-operator-group
+        spec:
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: operators.coreos.com/v1
+                kind: OperatorGroup
+                metadata:
+                  name: elasticsearch-operator
+                  namespace: openshift-operators-redhat
+                spec:
+                  targetNamespaces:
+                    - openshift-operators-redhat
+          pruneObjectBehavior: DeleteIfCreated
+          remediationAction: inform
+          severity: high
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
           name: elasticsearch-operator-product-sub-1
         spec:
           object-templates:
