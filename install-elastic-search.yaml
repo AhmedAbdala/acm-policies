@@ -64,7 +64,7 @@ spec:
                   channel: stable-5.7
                   installPlanApproval: Automatic
                   source: redhat-operators
-                  sourceNamespace: 	openshift-marketplace
+                  sourceNamespace: openshift-marketplace
           severity: high
     - objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
